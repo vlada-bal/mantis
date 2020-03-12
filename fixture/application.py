@@ -1,5 +1,6 @@
 from selenium import webdriver
 from fixture.session import SessionHelper
+from fixture.project_helper import ProjectHelper
 
 class Application:
 
@@ -15,6 +16,7 @@ class Application:
         self.wd.implicitly_wait(3)
         self.session = SessionHelper(self)
         self.base_url = base_url
+        self.project_helper = ProjectHelper(self)
 
     def is_valid(self):
         try:
@@ -33,6 +35,8 @@ class Application:
 
     def destroy(self):
         self.wd.quit()
+
+
 
 
 
