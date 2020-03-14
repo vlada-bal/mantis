@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
 <title>What's new in ftputil 3.0?</title>
 <meta name="date" content="2013-09-29" />
 <meta name="author" content="Stefan Schwarzer &lt;sschwarzer&#64;sschwarzer.net&gt;" />
@@ -319,7 +319,7 @@ hand, in line with the file system APIs of both Python 2 and 3,
 methods take either byte strings or unicode strings. Methods that take
 and return strings (for example, <tt class="docutils literal">FTPHost.path.abspath</tt> or
 <tt class="docutils literal">FTPHost.listdir</tt>), return the same string type they get.</p>
-<div class="admonition note">
+<div class="note">
 <p class="first admonition-title">Note</p>
 <p>Both Python 2 and 3 have two &quot;string&quot; types where one type represents a
 sequence of bytes and the other type character (text) data.</p>
@@ -459,7 +459,7 @@ being a byte string.</li>
 may need to change your code to adapt to the changes in newline
 conversion, encoding and/or string type (see above sections).</li>
 </ul>
-<div class="admonition note">
+<div class="note">
 <p class="first admonition-title">Note</p>
 <p>In the root directory of the installed ftputil package is a script
 <tt class="docutils literal">find_invalid_code.py</tt> which, given a start directory as

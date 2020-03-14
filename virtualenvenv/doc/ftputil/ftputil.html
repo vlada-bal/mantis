@@ -3,9 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.13.1: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
 <title>ftputil -- a high-level FTP client library</title>
-<meta name="date" content="2017-11-08" />
+<meta name="date" content="2014-10-12" />
 <meta name="author" content="Stefan Schwarzer &lt;sschwarzer&#64;sschwarzer.net&gt;" />
 <style type="text/css">
 
@@ -283,12 +283,12 @@ ul.auto-toc {
 <col class="docinfo-content" />
 <tbody valign="top">
 <tr><th class="docinfo-name">Version:</th>
-<td>3.4</td></tr>
+<td>3.2</td></tr>
 <tr><th class="docinfo-name">Date:</th>
-<td>2017-11-08</td></tr>
-<tr class="summary field"><th class="docinfo-name">Summary:</th><td class="field-body">high-level FTP client library for Python</td>
+<td>2014-10-12</td></tr>
+<tr class="field"><th class="docinfo-name">Summary:</th><td class="field-body">high-level FTP client library for Python</td>
 </tr>
-<tr class="keywords field"><th class="docinfo-name">Keywords:</th><td class="field-body">FTP, <tt class="docutils literal">ftplib</tt> substitute, virtual filesystem, pure Python</td>
+<tr class="field"><th class="docinfo-name">Keywords:</th><td class="field-body">FTP, <tt class="docutils literal">ftplib</tt> substitute, virtual filesystem, pure Python</td>
 </tr>
 <tr><th class="docinfo-name">Author:</th>
 <td>Stefan Schwarzer &lt;<a class="reference external" href="mailto:sschwarzer&#64;sschwarzer.net">sschwarzer&#64;sschwarzer.net</a>&gt;</td></tr>
@@ -303,7 +303,7 @@ ul.auto-toc {
 <li><a class="reference internal" href="#directory-and-file-names" id="id7">Directory and file names</a></li>
 <li><a class="reference internal" href="#ftphost-objects" id="id8"><tt class="docutils literal">FTPHost</tt> objects</a><ul>
 <li><a class="reference internal" href="#construction" id="id9">Construction</a><ul>
-<li><a class="reference internal" href="#id1" id="id10">Introduction</a></li>
+<li><a class="reference internal" href="#basics" id="id10">Basics</a></li>
 <li><a class="reference internal" href="#session-factories" id="id11">Session factories</a></li>
 </ul>
 </li>
@@ -312,7 +312,7 @@ ul.auto-toc {
 <li><a class="reference internal" href="#attributes" id="id14">Attributes</a></li>
 <li><a class="reference internal" href="#remote-file-system-navigation" id="id15">Remote file system navigation</a></li>
 <li><a class="reference internal" href="#uploading-and-downloading-files" id="id16">Uploading and downloading files</a></li>
-<li><a class="reference internal" href="#id2" id="id17">Time zone correction</a></li>
+<li><a class="reference internal" href="#id1" id="id17">Time zone correction</a></li>
 <li><a class="reference internal" href="#creating-and-removing-directories" id="id18">Creating and removing directories</a></li>
 <li><a class="reference internal" href="#removing-files-and-links" id="id19">Removing files and links</a></li>
 <li><a class="reference internal" href="#retrieving-information-about-directories-files-and-links" id="id20">Retrieving information about directories, files and links</a></li>
@@ -324,8 +324,8 @@ ul.auto-toc {
 </ul>
 </li>
 <li><a class="reference internal" href="#file-like-objects" id="id24">File-like objects</a><ul>
-<li><a class="reference internal" href="#id3" id="id25">Construction</a><ul>
-<li><a class="reference internal" href="#basics" id="id26">Basics</a></li>
+<li><a class="reference internal" href="#id2" id="id25">Construction</a><ul>
+<li><a class="reference internal" href="#id3" id="id26">Basics</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#attributes-and-methods" id="id27">Attributes and methods</a></li>
@@ -382,9 +382,7 @@ to <a class="reference external" href="https://docs.python.org/library/os.html#o
 <h1><a class="toc-backref" href="#id5"><tt class="docutils literal">ftputil</tt> features</a></h1>
 <ul class="simple">
 <li>Method names are familiar from Python's <tt class="docutils literal">os</tt>, <tt class="docutils literal">os.path</tt> and
-<tt class="docutils literal">shutil</tt> modules. For example, use <tt class="docutils literal">os.path.join</tt> to join
-paths for a local file system and <tt class="docutils literal">ftp_host.path.join</tt> to join
-paths for a remote FTP file system.</li>
+<tt class="docutils literal">shutil</tt> modules</li>
 <li>Remote file system navigation (<tt class="docutils literal">getcwd</tt>, <tt class="docutils literal">chdir</tt>)</li>
 <li>Upload and download files (<tt class="docutils literal">upload</tt>, <tt class="docutils literal">upload_if_newer</tt>,
 <tt class="docutils literal">download</tt>, <tt class="docutils literal">download_if_newer</tt>)</li>
@@ -533,79 +531,40 @@ If you know <em>any</em> way to do it, please let me know. :-)</p>
 directory.</p>
 </li>
 <li><p class="first"><tt class="docutils literal">TimeShiftError</tt></p>
-<p>is used to denote errors which relate to setting the <a class="reference internal" href="#time-shift">time shift</a>.</p>
+<p>is used to denote errors which relate to setting the <a class="reference internal" href="#time-shift">time shift</a>,
+<em>for example</em> trying to set a value which is no multiple of a full
+hour.</p>
 </li>
 </ul>
 </div>
 <div class="section" id="directory-and-file-names">
 <h1><a class="toc-backref" href="#id7">Directory and file names</a></h1>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Keep in mind that this section only applies to directory and file
-<em>names</em>, not file <em>contents</em>. Encoding and decoding for file
-contents is handled by the <tt class="docutils literal">encoding</tt> argument for
-<a class="reference internal" href="#ftphost-open">FTPHost.open</a>.</p>
-</div>
-<p>First off: If your directory and file names (both as
-arguments and on the server) contain only ISO 8859-1 (latin-1)
-characters, you can use such names in the form of byte strings or
-unicode strings. However, you can't mix different string types (bytes
-and unicode) in one call (for example in <tt class="docutils literal">FTPHost.path.join</tt>).</p>
-<p>If you have directory or file names with characters that aren't in
-latin-1, it's recommended to use byte strings. In that case,
-returned paths will be byte strings, too.</p>
-<p>Read on for details.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The approach described below may look awkward and in a way it is.
-The intention of <tt class="docutils literal">ftputil</tt> is to behave like the local file
-system APIs of Python 3 as far as it makes sense. Moreover, the
-taken approach makes sure that directory and file names that were
-used with Python 3's native <tt class="docutils literal">ftplib</tt> module will be compatible
-with <tt class="docutils literal">ftputil</tt> and vice versa. Otherwise you may be able to use a
-file name with <tt class="docutils literal">ftputil</tt>, but get an exception when trying to
-read the same file with Python 3's <tt class="docutils literal">ftplib</tt> module.</p>
-</div>
-<p>Methods that take names of directories and/or files can take either
-byte or unicode strings. If a method got a string argument and returns
-one or more strings, these strings will have the same string type as
-the argument(s). Mixing different string arguments in one call (for
-example in <tt class="docutils literal">FTPHost.path.join</tt>) isn't allowed and will cause a
-<tt class="docutils literal">TypeError</tt>. These rules are the same as for local file system
-operations in Python 3. Since <tt class="docutils literal">ftputil</tt> uses the same API for Python
-2, <tt class="docutils literal">ftputil</tt> will do the same when run on Python 2.</p>
-<p>Byte strings for directory and file names will be sent to the server
-as-is. On the other hand, unicode strings will be encoded to byte
-strings, assuming latin-1 encoding. This implies that such unicode
-strings must only contain code points 0-255 for the latin-1 character
-set. Using any other characters will result in a
-<tt class="docutils literal">UnicodeEncodeError</tt> exception.</p>
-<p>If you have directory or file names as unicode strings with non-latin-1
-characters, encode the unicode strings to byte strings yourself, using
-the encoding you know the server uses. Decode received paths with the
-same encoding. Encapsulate these conversions as far as you can.
-Otherwise, you'd have to adapt potentially a lot of code if the server
-encoding changes.</p>
-<p>If you <em>don't</em> know the encoding on the server side,
-it's probably the best to only use byte strings for directory and file
-names. That said, as soon as you <em>show</em> the names to a user, you -- or
-the library you use for displaying the names -- has to guess an
-encoding.</p>
+<p>Methods that take names of directories and files can take either byte
+strings (<tt class="docutils literal">str</tt> on Python 2, <tt class="docutils literal">bytes</tt> on Python 3) or unicode
+strings (<tt class="docutils literal">unicode</tt> on Python 2, <tt class="docutils literal">str</tt> on Python 3).</p>
+<p>Byte strings will be sent to the FTP server as-is. Unicode strings
+will be encoded with the encoding returned from
+<tt class="docutils literal">locale.getpreferredencoding</tt>. This is the same semantics as for
+locally used names in Python 3.</p>
+<p>Methods that take and return a directory or file name will return the
+same string type as they're given. For example, if the argument to
+<tt class="docutils literal">FTPHost.path.abspath</tt> is a byte string, you'll get a byte string
+back. This behavior is the same as for the local file system API in
+Python 2 and 3.</p>
 </div>
 <div class="section" id="ftphost-objects">
 <h1><a class="toc-backref" href="#id8"><tt class="docutils literal">FTPHost</tt> objects</a></h1>
 <div class="section" id="construction">
 <span id="ftphost-construction"></span><h2><a class="toc-backref" href="#id9">Construction</a></h2>
-<div class="section" id="id1">
-<h3><a class="toc-backref" href="#id10">Introduction</a></h3>
-<p><tt class="docutils literal">FTPHost</tt> instances can be created with the following call:</p>
+<div class="section" id="basics">
+<h3><a class="toc-backref" href="#id10">Basics</a></h3>
+<p><tt class="docutils literal">FTPHost</tt> instances can be generated with the following call:</p>
 <pre class="literal-block">
 ftp_host = ftputil.FTPHost(server, user, password, account,
                            session_factory=ftplib.FTP)
 </pre>
 <p>The first four parameters are strings with the same meaning as for the
-FTP class in the <tt class="docutils literal">ftplib</tt> module. Usually the <tt class="docutils literal">account</tt> and
-<tt class="docutils literal">session_factory</tt> arguments aren't needed though.</p>
+FTP class in the <tt class="docutils literal">ftplib</tt> module.</p>
 <p><tt class="docutils literal">FTPHost</tt> objects can also be used in a <tt class="docutils literal">with</tt> statement:</p>
 <pre class="literal-block">
 import ftputil
@@ -841,7 +800,7 @@ happened, the return value is <tt class="docutils literal">True</tt>, else <tt c
 </li>
 </ul>
 </div>
-<div class="section" id="id2">
+<div class="section" id="id1">
 <span id="time-zone-correction"></span><span id="time-shift"></span><h3><a class="toc-backref" href="#id17">Time zone correction</a></h3>
 <p>If the client where <tt class="docutils literal">ftputil</tt> runs and the server have a different
 understanding of their local times, this has to be taken into account
@@ -863,8 +822,9 @@ time_shift = server_time - client_time
 <a class="reference internal" href="#download-if-newer">download_if_newer</a> to work correctly even if the time zone of the
 FTP server differs from that of the client. Note that the time shift
 value <em>can be negative</em>.</p>
-<p>If the time shift value is invalid, for example its absolute value
-is larger than 24 hours, a <tt class="docutils literal">TimeShiftError</tt> is raised.</p>
+<p>If the time shift value is invalid, e. g. no multiple of a full hour
+or its absolute value larger than 24 hours, a <tt class="docutils literal">TimeShiftError</tt> is
+raised.</p>
 <p>See also <a class="reference internal" href="#synchronize-times">synchronize_times</a> for a way to set the time shift with a
 simple method call.</p>
 </li>
@@ -1308,10 +1268,10 @@ with ftputil.FTPHost(server, userid, password) as ftp_host:
 </div>
 </div>
 <div class="section" id="file-like-objects">
-<span id="ftphost-open"></span><h1><a class="toc-backref" href="#id24">File-like objects</a></h1>
-<div class="section" id="id3">
+<h1><a class="toc-backref" href="#id24">File-like objects</a></h1>
+<div class="section" id="id2">
 <h2><a class="toc-backref" href="#id25">Construction</a></h2>
-<div class="section" id="basics">
+<div class="section" id="id3">
 <h3><a class="toc-backref" href="#id26">Basics</a></h3>
 <p><tt class="docutils literal">FTPFile</tt> objects are returned by a call to <tt class="docutils literal">FTPHost.open</tt>;
 never use the <tt class="docutils literal">FTPFile</tt> constructor directly.</p>
@@ -1320,7 +1280,7 @@ the <a class="reference external" href="http://docs.python.org/library/io.html">
 2.6 and 2.7.</p>
 <ul>
 <li><p class="first"><tt class="docutils literal">FTPHost.open(path, <span class="pre">mode=&quot;r&quot;,</span> buffering=None, encoding=None,
-errors=None, newline=None, rest=None)</tt></p>
+errors=None, newline=None)</tt></p>
 <p>returns a file-like object that refers to the path on the remote
 host. This path may be absolute or relative to the current directory
 on the remote host (this directory can be determined with the
@@ -1339,36 +1299,17 @@ byte strings.</p>
 <p>Similarly, text files always work with unicode strings (<tt class="docutils literal">unicode</tt>
 in Python 2, <tt class="docutils literal">str</tt> in Python 3). Here, read operations return
 unicode strings and write operations only accept unicode strings.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Note that the semantics of &quot;text mode&quot; has changed fundamentally
-from ftputil 2.8 and earlier. Previously, &quot;text mode&quot; implied
-converting newline characters to <tt class="docutils literal">\r\n</tt> when writing remote
-files and converting newlines to <tt class="docutils literal">\n</tt> when reading remote
-files. This is in line with the &quot;text mode&quot; notion of FTP command
-line clients. Now, &quot;text mode&quot; follows the semantics in Python's
-<tt class="docutils literal">io</tt> module.</p>
-</div>
 <p>The arguments <tt class="docutils literal">errors</tt> and <tt class="docutils literal">newline</tt> have the same semantics as
 in <a class="reference external" href="http://docs.python.org/library/io.html#io.open">io.open</a>. The argument <tt class="docutils literal">buffering</tt> currently is ignored.
 It's only there for compatibility with the <tt class="docutils literal">io.open</tt> interface.</p>
-<p>If the file is opened in binary mode, you may pass 0 or a positive
-integer for the <tt class="docutils literal">rest</tt> argument. The argument is passed to the
-underlying FTP session instance (for example an instance of
-<tt class="docutils literal">ftplib.FTP</tt>) to start reading or writing at the given byte
-offset. For example, if a remote file contains the letters
-&quot;abcdef&quot; in ASCII encoding, <tt class="docutils literal">rest=3</tt> will start reading at &quot;d&quot;.</p>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">If you pass <tt class="docutils literal">rest</tt> values which point <em>after</em> the file, the
-behavior is undefined and may even differ from one FTP server to
-another. Therefore, use the <tt class="docutils literal">rest</tt> argument only for error
-recovery in case of interrupted transfers. You need to keep track
-of the transferred data so that you can provide a valid <tt class="docutils literal">rest</tt>
-argument for a resumed transfer.</p>
-</div>
 </li>
 </ul>
+<p>Note that the semantics of &quot;text mode&quot; has changed fundamentally from
+ftputil 2.8 and earlier. Previously, &quot;text mode&quot; implied converting
+newline characters to <tt class="docutils literal">\r\n</tt> when writing remote files and
+converting newlines to <tt class="docutils literal">\n</tt> when reading remote files. This is
+in line with the &quot;text mode&quot; notion of FTP command line clients.
+Now, &quot;text mode&quot; follows the semantics in Python's <tt class="docutils literal">io</tt> module.</p>
 <p><tt class="docutils literal">FTPHost.open</tt> can also be used in a <tt class="docutils literal">with</tt> statement:</p>
 <pre class="literal-block">
 import ftputil
@@ -1909,7 +1850,7 @@ Unit Testing with Mock Objects</a>.</li>
 <h1><a class="toc-backref" href="#id45">Authors</a></h1>
 <p><tt class="docutils literal">ftputil</tt> is written by Stefan Schwarzer
 &lt;<a class="reference external" href="mailto:sschwarzer&#64;sschwarzer.net">sschwarzer&#64;sschwarzer.net</a>&gt; and contributors (see
-<tt class="docutils literal">doc/contributors.txt</tt>).</p>
+<cite>doc/contributors.txt</cite>)</p>
 <p>The original <tt class="docutils literal">lrucache</tt> module was written by Evan Prodromou
 &lt;<a class="reference external" href="mailto:evan&#64;prodromou.name">evan&#64;prodromou.name</a>&gt;.</p>
 <p>Feedback is appreciated. :-)</p>

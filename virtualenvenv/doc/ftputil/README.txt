@@ -15,27 +15,38 @@ in different timezones.
 What's new?
 -----------
 
-Since version 3.3.1 the following changed:
+Since version 3.1 the following changed:
 
-- Several bugs were fixed [1-5].
+- For some platforms (notably Windows) modification datetimes before
+  the epoch would cause an `OverflowError` [1]. Other platforms could
+  return negative values. Since the Python documentation for the
+  `time` module [2] points out that values before the epoch might
+  cause problems, ftputil now sets the float value for such datetimes
+  to 0.0.
 
-- Added deprecation warnings for backward incompatibilities in the
-  upcoming ftputil 4.0.0.
+  In theory, this might cause backward compatibility problems, but
+  it's very unlikely since pre-epoch timestamps in directory listings
+  should be very rare.
 
-Important note
---------------
+- On some platforms, the `time.mktime` implementation could behave
+  strange and accept invalid date/time values. For example, a day
+  value of 32 would be accepted and implicitly cause a "wrap" to the
+  next month. Such invalid values now result in a `ParserError`.
 
-The next version of ftputil will be 4.0.0 (apart from small fixes in
-possible 3.4.x versions).
+- Make error handling more robust where the underlying FTP session
+  factory (for example, `ftplib.FTP`) uses byte strings for exception
+  messages. [3]
 
-ftputil 4.0.0 will make some backward-incompatible changes:
+- Improved error handling for directory listings. As just one example,
+  previously a non-integer value for a day would unintentionally cause
+  a `ValueError`. Now this causes a `ParserError`.
 
-- Support for Python 2 will be removed. There are several reasons for
-  this, which are explained in [6].
+- Extracted socket file adapter module [4] so that it can be used
+  by other projects.
 
-- The flag `use_list_a_option` will be set to `False` by default. This
-  option was intended to make life easier for users of the library,
-  but turned out to be problematic (see [7]).
+Note that ftputil 3.0 broke backward compatibility with ftputil 2.8
+and before. The differences are described here:
+http://ftputil.sschwarzer.net/trac/wiki/WhatsNewInFtputil3.0
 
 Documentation
 -------------
@@ -48,7 +59,8 @@ Prerequisites
 -------------
 
 To use ftputil, you need Python, at least version 2.6. Python 3.x
-versions work as well.
+versions work as well. Python is a programming language, available
+from http://www.python.org for free.
 
 Installation
 ------------
@@ -120,12 +132,7 @@ Evan Prodromou <evan@bad.dynu.ca> (lrucache module)
 
 Please provide feedback! It's certainly appreciated. :-)
 
-
-[1] http://ftputil.sschwarzer.net/trac/ticket/107
-[2] http://ftputil.sschwarzer.net/trac/ticket/109
-[3] http://ftputil.sschwarzer.net/trac/ticket/112
-[4] http://ftputil.sschwarzer.net/trac/ticket/113
-[5] http://ftputil.sschwarzer.net/trac/ticket/114
-[6] http://lists.sschwarzer.net/pipermail/ftputil/2017q3/000465.html
-[7] http://ftputil.sschwarzer.net/trac/ticket/110
-
+[1] http://ftputil.sschwarzer.net/trac/ticket/83
+[2] https://docs.python.org/3/library/time.html
+[3] http://ftputil.sschwarzer.net/trac/ticket/85
+[4] http://ftputil.sschwarzer.net/trac/wiki/SocketFileAdapter
