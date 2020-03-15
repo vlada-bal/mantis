@@ -17,7 +17,7 @@ class ProjectHelper:
         wd.find_element_by_xpath("//input[@value='Add Project']").click()
 
 
-    #не работает
+    #работает
     def delete_project(self):
         wd = self.app.wd
         self.open_create_page()
@@ -27,9 +27,9 @@ class ProjectHelper:
 
 
 
-    #не работает
+    #работает
     project_cache = None
-    def get_project_list(self):
+    def get_project_list_count(self):
         wd = self.app.wd
         self.open_create_page()
         elements = wd.find_elements_by_xpath("//table[@class='width100'][ @cellspacing='1']//tr[contains(@class, 'row')][@class != 'row-category']//a")
