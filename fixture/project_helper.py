@@ -29,11 +29,15 @@ class ProjectHelper:
 
     #работает
     project_cache = None
-    def get_project_list_count(self):
+    def get_project_list_names(self):
         wd = self.app.wd
         self.open_create_page()
+        names = []
         elements = wd.find_elements_by_xpath("//table[@class='width100'][ @cellspacing='1']//tr[contains(@class, 'row')][@class != 'row-category']//a")
-        return len(elements)
+        for element in elements:
+            project_name= element.text
+            names.append(project_name)
+        return names
 
 
 
