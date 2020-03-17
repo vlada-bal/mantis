@@ -6,3 +6,9 @@ class Project:
        self.inherit_global = inherit_global
        self.view_state = view_state
        self.description = description
+
+   def __eq__(self, other):
+       return self.name == other.name
+
+   def name(self):
+       return self.name

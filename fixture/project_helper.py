@@ -1,10 +1,17 @@
 from model.project import Project
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+import random
+import string
 
 class ProjectHelper:
     def __init__(self, app):
         self.app = app
+
+    def random_string(self, prefix, maxlen):
+        symbols = string.ascii_letters + string.digits
+        symbolList = [random.choice(symbols) for i in range(maxlen)]
+        return prefix + "".join(symbolList)
 
     # работает
     def create_project(self, project):
@@ -39,8 +46,14 @@ class ProjectHelper:
             names.append(project_name)
         return names
 
-
-
+    # конвертировать список пришедший из мыла в проджект модель
+    def convert_to_project_model(self, list):
+        result = []
+        for project_soap in list:
+            name=project_soap.name
+            project = Project(name=name)
+            result.append(project)
+        return result
 
     # открыть страницу создания проекта
     # Работает
