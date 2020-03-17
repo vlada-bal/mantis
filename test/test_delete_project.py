@@ -19,4 +19,5 @@ def test_delete_project(app):
     new_list = app.project_helper.get_project_list_names()
     #new_list2 = len(app.soap.get_list_project(login, password))
 # проверяем
-    assert len(old_list) - 1 == len(new_list)
+    excluded_first = old_list[1:]
+    assert excluded_first == new_list
